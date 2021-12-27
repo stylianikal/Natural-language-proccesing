@@ -1,0 +1,10 @@
+sent(sent(NP,VP)) --> np(NP),vp(VP).
+pp(pp(PREP,NP)) --> prep(PREP),np(NP).
+np(np(D,N)) --> det(D),noun(N).
+vp(vp(V,NP,PP)) --> verb(V),np(NP),pp(PP).
+det(det(the)) --> [the].
+verb(verb(brought)) --> [brought].
+noun(noun(waiter)) --> [waiter].
+noun(noun(meal)) --> [meal].
+noun(noun(table)) --> [table].
+prep(prep(to)) --> [to].

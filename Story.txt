@@ -1,0 +1,214 @@
+/* GRAMMAR RECOGNITION RULES (SENTENCE) */
+
+/* SENTENCE */
+s(1,Sem) --> pn(N), vp(1,V,N1),  		   {Sem=..[V,N,N1]}.	
+s(2,Sem) --> pn(N), vp(2,_,A),  		   {Sem=..[A,N]}.
+s(3,Sem) --> pn(N), vp(3,V,N1),  		   {Sem=..[V,N,N1]}.
+s(4,Sem) --> pn(N), iv(V,s),       		   {Sem=..[V,N]}.
+s(5,Sem) --> pn(N), iv(V,s),adv(A),		   {Sem=..[V,N,A]}.
+s(6,Sem) --> pn(N), tv(V,s),pn(N1),np(N2), {Sem=..[V,N,N1,N2]}.
+
+/* YES/NO QUERIES */
+q(1,tf,Sem) --> av(does),pn(N),v(V,q),n(N1),  		   {Sem=..[V,N,N1]}.
+q(2,tf,Sem) --> av(is),pn(N),adj(A), 			       {Sem=..[A,N]}.
+q(3,tf,Sem) --> av(does),pn(N),v(V,q),n(N1),  		   {Sem=..[V,N,N1]}.
+q(4,tf,Sem) --> av(is),pn(N),iv(V,q),			       {Sem=..[V,N]}.
+q(5,tf,Sem) --> av(is),pn(N),iv(V,q),adv(A),		   {Sem=..[V,N,A]}.
+q(6,tf,Sem) --> av(does),pn(N), tv(V,q),pn(N1),np(N2), {Sem=..[V,N,N1,N2]}. 
+q(6,tf,Sem) --> av(does),pn(N), tv(V,q),pn(N1),np(N2), {Sem=..[V,N,N1,N2]}. 
+
+
+/* FACT QUERIES */
+q(1,fact,F) --> [who],v(V,s),n(N1),	  		             {Sem=..[V,F,N1],Sem}.
+q(1,fact,F) --> [what],av(does),pn(N),v(V,q),  	       	 {Sem=..[V,N,F],Sem}.
+q(2,fact,F) --> [who],av(is),adj(A), 			         {Sem=..[A,F],Sem}.
+q(3,fact,F) --> [who],vp(3,V,N1), 	 		             {Sem=..[V,F,N1],Sem}.
+q(3,fact,F) --> [who],av(does),pn(N),v(V,q),  		     {Sem=..[V,N,F],Sem}.
+q(4,fact,F) --> [who],av(is),iv(V,q),			         {Sem=..[V,F],Sem}.
+q(5,fact,F) --> [how],av(does),pn(N),iv(V,s),		     {Sem=..[V,N,F],Sem}.
+q(5,fact,F) --> [how],av(is),pn(N),iv(V,q),		         {Sem=..[V,N,F],Sem}.
+q(5,fact,F) --> [who],iv(V,s),adv(A),			         {Sem=..[V,F,A],Sem}.
+q(6,fact,F) --> [who],tv(V,s),pn(N1),np(N2),		     {Sem=..[V,F,N1,N2],Sem}.
+q(6,fact,F) --> [who],av(is),pn(N),tv(V,q2),np(N2),[to], {Sem=..[V,N,F,N2] ,Sem}.
+q(6,fact,F) --> [what],[is],pn(N),tv(V,q2),[to],pn(N1),  {Sem=..[V,N,N1,F] ,Sem}.
+
+
+
+/* NOUN PHRASE */
+
+np(N) --> det(_),n(N).
+    
+	
+	
+/* VERB PHRASE */
+
+vp(1,V,N)  --> v(V,s),n(N).
+vp(2,is,A) --> av(is),adj(A).
+vp(3,V,N)  --> v(V,s),pn(N).
+
+
+
+/* VOCABULARY */
+
+pn(nick)    -->[nick].
+pn(rebecca) -->[rebecca].
+pn(alex)    -->[alex].
+pn(zina)    -->[zina].
+
+det(null) -->[].
+det(a)    -->[a].
+det(the)  -->[the].
+
+v(likes,s)  -->[likes].  v(likes,q)  -->[like].
+v(adores,s) -->[adores]. v(adores,q) -->[adore].
+v(hates,s)  -->[hates].  v(hates,q)  -->[hate].
+v(finds,s)  -->[finds].  v(finds,q)  -->[find].
+v(loses,s)  -->[loses].  v(loses,q)  -->[lose].
+:-dynamic likes/1,adores/1,hates/1,finds/1,loses/1.
+
+av(is)   -->[is].
+av(does) -->[does].
+
+adj(social)    -->[social].
+adj(naughty)   -->[naughty].
+adj(fat)       -->[fat].
+adj(beautiful) -->[beautiful].
+:-dynamic social/1,naughty/1,fat/1,beautiful/1.
+
+iv(drives,s) -->[drives]. iv(drives,q) -->[driving].
+iv(swims,s)  -->[swims].  iv(swims,q)  -->[swimming].
+:-dynamic swims/1,drives/1.
+:-dynamic swims/2,drives/2.
+
+tv(offers,s)  -->[offers].  tv(offers,q)  -->[offer].  tv(offers,q2)  -->[offering].
+tv(shouts,s)  -->[shouts].  tv(shouts,q)  -->[shout].  tv(shouts,q2)  -->[shouting].
+tv(gives,s)   -->[gives].   tv(gives,q)   -->[give].   tv(gives,q2)   -->[giving].
+tv(attacks,s) -->[attacks]. tv(attacks,q) -->[attack]. tv(attacks,q2) -->[attacking].
+tv(chases,s)  -->[chases].  tv(chases,q)  -->[chase].  tv(chases,q2)  -->[chasing].
+:-dynamic offers/1,shouts/1,gives/1,attacks/1,chases/1.
+
+adv(carefully) -->[carefully].
+adv(correctly) -->[correctly].
+
+n(chocolates) -->[chocolates].
+n(chocolate)  -->[chocolate].
+n(theater)    -->[theater].
+n(cinema)     -->[cinema].
+n(turtle)     -->[turtle].
+n(rabbit)     -->[rabbit].
+n(kitchen)    -->[kitchen].
+n(spoon)      -->[spoon].
+n(home)       -->[home].
+
+
+
+
+/* FUNCTIONS */
+
+tell(X):- s(TYPE,Sem,X,[]),assert(Sem),write('fact type '),write(TYPE),write(' added to knowledge base...'),nl.
+
+ask(X):-  q(_,tf,Sem,X,[]),Sem,write('Yes.').
+
+ask(X):-  q(_,fact,Fact,X,[]),write(Fact).
+
+
+/* 
+tell([nick,is,social]).
+
+tell([rebecca,is,naughty]).
+
+tell([alex,is,fat]).
+
+tell([zina,is,beautiful]).
+
+tell([nick,likes,chocolates]).
+
+tell([rebecca,offers,nick,a,chocolate]).
+
+tell([rebecca,adores,theater]).
+
+tell([nick,hates,cinema]).
+
+tell([nick,drives,carefully]).
+tell([nick,drives]).
+
+tell([rebecca,swims,correctly]).
+tell([rebecca,swims]).
+
+tell([nick,finds,turtle]).
+
+tell([rebecca,loses,rabbit]).
+
+tell([alex,shouts,zina,the,kitchen]).
+
+tell([rebecca,gives,zina,the,spoon]).
+
+tell([zina,attacks,alex,the,spoon]).
+
+tell([alex,chases,zina,the,home]).
+
+
+
+
+ask([who,is,social]).
+ask([is,nick,social]).
+
+ask([who,is,naughty]).
+ask([is,rebecca,naughty]).
+
+ask([who,is,fat]).
+ask([is,alex,fat]).
+
+ask([who,is,beautiful]).
+ask([is,zina,beautiful]).
+
+ask([who,likes,chocolates]).
+ask([what,does,nick,like]).
+
+ask([who,offers,nick,a,chocolate]).
+ask([who,is,rebecca,offering,a,chocolate,to]).   
+ask([what,is,rebecca,offering,to,nick]).
+ask([does,rebecca,offer,nick,a,chocolate]).
+
+ask([who,adores,theater]).
+ask([what,does,rebecca,adore]).
+ask([does,rebecca,adore,theater]).
+
+ask([who,hates,cinema]).
+ask([what,does,nick,hate]).
+ask([does,nick,hate,cinema]).
+
+ask([is,nick,driving]).
+ask([is,nick,driving,carefully]).
+ask([who,is,driving]).
+ask([who,drives,carefully]).
+ask([how,does,nick,drives]).
+ask([how,is,nick,driving]).
+
+ask([is,rebecca,swimming]).
+ask([is,rebecca,swimming,correctly]).
+ask([who,is,swimming]).
+ask([who,swims,correctly]).
+ask([how,does,rebecca,swims]).
+ask([how,is,rebecca,swimming]).
+
+ask([who,finds,turtle]).
+
+ask([who,loses,rabbit]).
+
+ask([who,shouts,zina,the,kitchen]).
+ask([who,is,alex,shouting,the,kitchen,to]).
+
+ask([who,gives,zina,the,spoon]).
+ask([who,is,rebecca,giving,the,spoon,to]).
+ask([what,is,rebecca,giving,to,zina]).
+ask([does,rebecca,give,zina,the,spoon]).
+
+ask([who,attacks,alex,the,spoon]).
+ask([who,is,zina,attacking,the,spoon,to]).
+ask([what,is,zina,attacking,to,alex]).
+ask([does,zina,attack,alex,the,spoon]).
+
+ask([who,chases,zina,the,home]).
+ask([who,is,alex,chasing,the,home,to]).
+*/
